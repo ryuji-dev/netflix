@@ -59,12 +59,15 @@ export class AppController {
   }
 
   @Patch(':id')
-  patchMovie() {
-    return {
-      id: 3,
-      title: '어벤져스',
-      characters: ['아이언맨', '캡틴 아메리카', '토르', '블랙 위도우'],
-    };
+  patchMovie(@Param('id') id: string, @Body('title') title: string) {
+    const movie = this.movies.find((m) => m.id === +id);
+
+    if (!movie)
+      throw new NotFoundException('존재하지 않는 ID 값의 영화입니다.');
+
+    Object.assign(movie, { title });
+
+    return movie;
   }
 
   @Delete(':id')
