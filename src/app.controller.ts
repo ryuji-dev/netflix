@@ -29,26 +29,13 @@ export class AppController {
     return this.appService.createMovie(title);
   }
 
-  // @Patch(':id')
-  // patchMovie(@Param('id') id: string, @Body('title') title: string) {
-  //   const movie = this.movies.find((m) => m.id === +id);
+  @Patch(':id')
+  updateMovie(@Param('id') id: string, @Body('title') title: string) {
+    return this.appService.updateMovie(+id, title);
+  }
 
-  //   if (!movie) throw new NotFoundException('존재하지 않는 ID의 영화입니다.');
-
-  //   Object.assign(movie, { title });
-
-  //   return movie;
-  // }
-
-  // @Delete(':id')
-  // deleteMovie(@Param('id') id: string) {
-  //   const movieIndex = this.movies.findIndex((m) => m.id === +id);
-
-  //   if (movieIndex === -1)
-  //     throw new NotFoundException('존재하지 않는 ID의 영화입니다.');
-
-  //   this.movies.splice(movieIndex, 1);
-
-  //   return id;
-  // }
+  @Delete(':id')
+  deleteMovie(@Param('id') id: string) {
+    return this.appService.deleteMovie(+id);
+  }
 }
