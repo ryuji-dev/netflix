@@ -1,31 +1,36 @@
 import { Controller, Delete, Get, Patch, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 
+interface Movie {
+  id: number;
+  title: string;
+}
+
 @Controller('movie')
 export class AppController {
+  private movies: Movie[] = [
+    {
+      id: 1,
+      title: '해리포터',
+    },
+    {
+      id: 2,
+      title: '반지의 제왕',
+    },
+  ];
+
   constructor(private readonly appService: AppService) {}
 
   @Get()
   getMovies() {
-    return [
-      {
-        id: 1,
-        name: '해리포터',
-        characters: ['해리포터', '헤르미온느 그레인저', '론 위즐리'],
-      },
-      {
-        id: 2,
-        name: '반지의 제왕',
-        characters: ['간달프', '프로도', '골룸'],
-      },
-    ];
+    return this.movies;
   }
 
   @Get(':id')
   getMovie() {
     return {
       id: 1,
-      name: '해리포터',
+      title: '해리포터',
       characters: ['해리포터', '헤르미온느 그레인저', '론 위즐리'],
     };
   }
@@ -34,7 +39,7 @@ export class AppController {
   postMovie() {
     return {
       id: 3,
-      name: '어벤져스',
+      title: '어벤져스',
       characters: ['아이언맨', '캡틴 아메리카', '토르'],
     };
   }
@@ -43,7 +48,7 @@ export class AppController {
   patchMovie() {
     return {
       id: 3,
-      name: '어벤져스',
+      title: '어벤져스',
       characters: ['아이언맨', '캡틴 아메리카', '토르', '블랙 위도우'],
     };
   }
