@@ -17,4 +17,12 @@ export class UpdateMovieDto {
   // @IsNotEmpty() -> null || undefined || '' 이 아니어야 함
   // @IsIn(['test', 'test2']) -> 값이 test 또는 test2 중 하나여야 함
   // @IsNotIn(['test', 'test2']) -> 값이 test 또는 test2 중 하나가 아니어야 함
+
+  // @IsBoolean() -> true || false
+  // @IsString() -> 문자열
+  // @IsNumber() -> 숫자
+  // @IsInt() -> 정수
+  // @IsArray() -> 배열
+  // @IsEnum(MovieGenre) -> 열거형
+  // @IsDateString() -> 날짜 문자열
 }
