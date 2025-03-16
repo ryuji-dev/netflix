@@ -8,4 +8,13 @@ export class UpdateMovieDto {
   @IsNotEmpty()
   @IsOptional()
   genre?: string;
+
+  // @IsDefined() -> null || undefined
+  // @IsOptional() -> ?타입으로 처리
+  // @Equals('test') -> 값이 test만 가능
+  // @NotEquals('test') -> 값이 test가 아니어야 함
+  // @IsEmpty() -> null || undefined || ''
+  // @IsNotEmpty() -> null || undefined || '' 이 아니어야 함
+  // @IsIn(['test', 'test2']) -> 값이 test 또는 test2 중 하나여야 함
+  // @IsNotIn(['test', 'test2']) -> 값이 test 또는 test2 중 하나가 아니어야 함
 }
