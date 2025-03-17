@@ -1,4 +1,40 @@
-import { IsNotEmpty, IsOptional } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsOptional,
+  registerDecorator,
+  ValidationArguments,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+  ValidationOptions,
+} from 'class-validator';
+
+@ValidatorConstraint({ async: true })
+class PasswordValidator implements ValidatorConstraintInterface {
+  validate(
+    value: string,
+    validationArguments?: ValidationArguments,
+  ): Promise<boolean> | boolean {
+    if (typeof value !== 'string') {
+      return false;
+    }
+    // 비밀번호 길이는 4~8
+    return value.length > 4 && value.length < 8;
+  }
+  defaultMessage?(validationArguments?: ValidationArguments): string {
+    return '비밀번호 길이는 4~8자여야 합니다.';
+  }
+}
+
+function IsPasswordValid(validationOptions?: ValidationOptions) {
+  return function (object: Object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName,
+      options: validationOptions,
+      validator: PasswordValidator,
+    });
+  };
+}
 
 export class UpdateMovieDto {
   @IsNotEmpty()
@@ -43,4 +79,7 @@ export class UpdateMovieDto {
   // @IsUUID() -> UUID
   // @IsLatitude() -> 위도
   // @IsLongitude() -> 경도
+
+  @IsPasswordValid()
+  test: string;
 }
