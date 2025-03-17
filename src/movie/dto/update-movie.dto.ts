@@ -32,4 +32,15 @@ export class UpdateMovieDto {
   // @IsZero() -> 0
   // @Min(10) -> 최소 10 이상
   // @Max(10) -> 최대 10 이하
+
+  // @Contains('test') -> 'test' 포함
+  // @IsNotContains('test') -> 'test' 포함되지 않음
+  // @IsAlphanumeric() -> 알파벳 또는 숫자
+  // @IsCreditCard() -> 신용카드 번호
+  // @IsHexColor() -> 16진수 색상
+  // @MaxLength(10) -> 최대 10글자
+  // @MinLength(10) -> 최소 10글자
+  // @IsUUID() -> UUID
+  // @IsLatitude() -> 위도
+  // @IsLongitude() -> 경도
 }
