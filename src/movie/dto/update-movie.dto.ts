@@ -25,4 +25,11 @@ export class UpdateMovieDto {
   // @IsArray() -> 배열
   // @IsEnum(MovieGenre) -> 열거형
   // @IsDateString() -> 날짜 문자열
+
+  // @IsDivisibleBy(2) -> 2로 나누어 떨어져야 함
+  // @IsPositive() -> 양수
+  // @IsNegative() -> 음수
+  // @IsZero() -> 0
+  // @Min(10) -> 최소 10 이상
+  // @Max(10) -> 최대 10 이하
 }
