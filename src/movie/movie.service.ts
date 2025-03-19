@@ -74,9 +74,13 @@ export class MovieService {
   }
 
   async deleteMovie(id: number) {
-    const movie = await this.movieRepository.findOne({ where: { id } });
+    const movie = await this.movieRepository.findOne({
+      where: { id },
+      relations: ['detail'],
+    });
     if (!movie) throw new NotFoundException('존재하지 않는 ID의 영화입니다.');
     await this.movieRepository.delete(id);
+    await this.movieDetailRepository.delete(movie.detail.id);
 
     return id;
   }
