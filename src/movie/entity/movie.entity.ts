@@ -6,6 +6,7 @@ import {
   JoinColumn,
   ManyToOne,
   ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { BaseTable } from '../../common/entity/base-table.entity';
 import { MovieDetail } from './movie-detail.entity';
@@ -21,6 +22,7 @@ export class Movie extends BaseTable {
   title: string;
 
   @ManyToMany(() => Genre, (genre) => genre.movies)
+  @JoinTable()
   genres: Genre[];
 
   @OneToOne(() => MovieDetail, (movieDetail) => movieDetail.id, {
