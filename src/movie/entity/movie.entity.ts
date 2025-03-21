@@ -5,10 +5,12 @@ import {
   OneToOne,
   JoinColumn,
   ManyToOne,
+  ManyToMany,
 } from 'typeorm';
 import { BaseTable } from '../../common/entity/base-table.entity';
 import { MovieDetail } from './movie-detail.entity';
 import { Director } from 'src/director/entitiy/director.entity';
+import { Genre } from 'src/genre/entity/genre.entity';
 
 @Entity()
 export class Movie extends BaseTable {
@@ -18,8 +20,8 @@ export class Movie extends BaseTable {
   @Column({ unique: true })
   title: string;
 
-  @Column()
-  genre: string;
+  @ManyToMany(() => Genre, (genre) => genre.movies)
+  genres: Genre[];
 
   @OneToOne(() => MovieDetail, (movieDetail) => movieDetail.id, {
     cascade: true,
