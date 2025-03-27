@@ -36,12 +36,15 @@ export class MovieController {
   }
 
   @Patch(':id')
-  updateMovie(@Param('id') id: string, @Body() body: UpdateMovieDto) {
+  updateMovie(
+    @Param('id', ParseIntPipe) id: string,
+    @Body() body: UpdateMovieDto,
+  ) {
     return this.movieService.update(+id, body);
   }
 
   @Delete(':id')
-  deleteMovie(@Param('id') id: string) {
+  deleteMovie(@Param('id', ParseIntPipe) id: string) {
     return this.movieService.remove(+id);
   }
 }
