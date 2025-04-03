@@ -10,13 +10,13 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   ParseIntPipe,
-  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { MovieTitleValidationPipe } from './pipe/movie-title-validation.pipe';
-import { JwtPayload } from 'src/auth/auth.service';
+import { AuthGuard } from 'src/auth/guard/auth.guard';
 
 @Controller('movie')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -24,11 +24,7 @@ export class MovieController {
   constructor(private readonly movieService: MovieService) {}
 
   @Get()
-  getMovies(
-    @Req() req: Request & { user: JwtPayload },
-    @Query('title', MovieTitleValidationPipe) title?: string,
-  ) {
-    console.log(req.user);
+  getMovies(@Query('title', MovieTitleValidationPipe) title?: string) {
     return this.movieService.findAll(title);
   }
 
@@ -38,6 +34,7 @@ export class MovieController {
   }
 
   @Post()
+  @UseGuards(AuthGuard)
   postMovie(@Body() body: CreateMovieDto) {
     return this.movieService.create(body);
   }
