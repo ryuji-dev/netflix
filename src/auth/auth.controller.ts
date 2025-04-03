@@ -1,7 +1,7 @@
 import { Controller, Get, Headers, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './strategy/local.strategy';
-import { Role, User } from 'src/user/entity/user.entity';
+import { User } from 'src/user/entity/user.entity';
 import { JwtAuthGuard } from './strategy/jwt.strategy';
 
 @Controller('auth')
@@ -19,17 +19,9 @@ export class AuthController {
   }
 
   @Post('token/access')
-  async rotateAccessToken(@Headers('authorization') token: string) {
-    const payload = await this.authService.parseBearerToken(token, true);
-
+  async rotateAccessToken(@Req() req: Request & { user: User }) {
     return {
-      accessToken: await this.authService.issueToken(
-        {
-          id: parseInt(payload.sub, 10),
-          role: Role[payload.role as keyof typeof Role],
-        },
-        false,
-      ),
+      accessToken: await this.authService.issueToken(req.user, false),
     };
   }
 
