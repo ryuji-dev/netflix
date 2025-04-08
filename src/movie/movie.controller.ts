@@ -20,6 +20,7 @@ import { Public } from 'src/auth/decorator/public.decorator';
 import { RBAC } from 'src/auth/decorator/rbac.decorator';
 import { Role } from 'src/user/entity/user.entity';
 import { GetMoviesDto } from './dto/get-movies.dto';
+// import { ResponseTimeInterceptor } from 'src/common/interceptor/response-time.interceptor';
 
 @Controller('movie')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -28,6 +29,7 @@ export class MovieController {
 
   @Public()
   @Get()
+  // @UseInterceptors(CacheInterceptor)
   getMovies(@Query() dto: GetMoviesDto) {
     return this.movieService.findAll(dto);
   }

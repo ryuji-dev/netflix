@@ -2,7 +2,6 @@ import {
   CallHandler,
   ExecutionContext,
   Injectable,
-  InternalServerErrorException,
   NestInterceptor,
   Request,
 } from '@nestjs/common';
@@ -23,12 +22,13 @@ export class ResponseTimeInterceptor implements NestInterceptor {
         const resTime = Date.now();
         const diff = resTime - reqTime;
 
-        if (diff > 1000) {
-          console.log(`TIMEOUT: [${req.method} ${req.url}] ${diff}ms`);
-          throw new InternalServerErrorException(
-            '서버 처리 시간이 너무 오래 걸렸습니다.',
-          );
-        } else console.log(`[${req.method} ${req.url}] ${diff}ms`);
+        // if (diff > 1000) {
+        //   console.log(`TIMEOUT: [${req.method} ${req.url}] ${diff}ms`);
+        //   throw new InternalServerErrorException(
+        //     '서버 처리 시간이 너무 오래 걸렸습니다.',
+        //   );
+        // } else console.log(`[${req.method} ${req.url}] ${diff}ms`);
+        console.log(`[${req.method} ${req.url}] ${diff}ms`);
       }),
     );
   }
