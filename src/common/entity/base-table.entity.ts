@@ -13,4 +13,8 @@ export class BaseTable {
   @VersionColumn()
   @Exclude()
   version: number;
+
+  // @DeleteDateColumn()
+  // @Exclude()
+  // deletedAt: Date;
 }
