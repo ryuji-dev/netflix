@@ -24,7 +24,11 @@ import { GetMoviesDto } from './dto/get-movies.dto';
 import { TransactionInterceptor } from 'src/common/interceptor/transaction.interceptor';
 import { QueryRunner } from 'typeorm';
 import { Request } from 'express';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import {
+  FileFieldsInterceptor,
+  FileInterceptor,
+  FilesInterceptor,
+} from '@nestjs/platform-express';
 // import { ResponseTimeInterceptor } from 'src/common/interceptor/response-time.interceptor';
 
 interface RequestWithQueryRunner extends Request {
@@ -52,11 +56,17 @@ export class MovieController {
   @Post()
   @RBAC(Role.admin)
   @UseInterceptors(TransactionInterceptor)
-  @UseInterceptors(FilesInterceptor('moives'))
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'moive', maxCount: 1 },
+      { name: 'poster', maxCount: 2 },
+    ]),
+  )
   postMovie(
     @Body() body: CreateMovieDto,
     @Req() req: RequestWithQueryRunner,
-    @UploadedFiles() files: Express.Multer.File[],
+    @UploadedFiles()
+    files: { moive?: Express.Multer.File[]; poster?: Express.Multer.File[] },
   ) {
     console.log('---------------------');
     console.log(files);
