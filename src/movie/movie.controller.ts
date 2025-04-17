@@ -11,8 +11,8 @@ import {
   ClassSerializerInterceptor,
   ParseIntPipe,
   Req,
-  // UploadedFile,
-  UploadedFiles,
+  UploadedFile,
+  // UploadedFiles,
   BadRequestException,
 } from '@nestjs/common';
 import { MovieService } from './movie.service';
@@ -26,10 +26,11 @@ import { TransactionInterceptor } from 'src/common/interceptor/transaction.inter
 import { QueryRunner } from 'typeorm';
 import { Request } from 'express';
 import {
-  FileFieldsInterceptor,
-  // FileInterceptor,
+  // FileFieldsInterceptor,
+  FileInterceptor,
   // FilesInterceptor,
 } from '@nestjs/platform-express';
+import { MovieFilePipe } from './pipe/movie-file.pipe';
 // import { ResponseTimeInterceptor } from 'src/common/interceptor/response-time.interceptor';
 
 interface RequestWithQueryRunner extends Request {
@@ -58,36 +59,35 @@ export class MovieController {
   @RBAC(Role.admin)
   @UseInterceptors(TransactionInterceptor)
   @UseInterceptors(
-    FileFieldsInterceptor(
-      [
-        { name: 'moive', maxCount: 1 },
-        { name: 'poster', maxCount: 2 },
-      ],
-      {
-        limits: {
-          fileSize: 1024 * 1024 * 5, // 5MB
-        },
-        fileFilter: (req, file, cb) => {
-          if (file.mimetype !== 'video/mp4') {
-            return cb(
-              new BadRequestException('mp4 파일만 업로드 가능합니다.'),
-              false,
-            );
-          }
-
-          return cb(null, true);
-        },
+    FileInterceptor('moive', {
+      limits: {
+        fileSize: 1024 * 1024 * 5, // 5MB
       },
-    ),
+      fileFilter: (req, file, cb) => {
+        if (file.mimetype !== 'video/mp4') {
+          return cb(
+            new BadRequestException('mp4 파일만 업로드 가능합니다.'),
+            false,
+          );
+        }
+
+        return cb(null, true);
+      },
+    }),
   )
   postMovie(
     @Body() body: CreateMovieDto,
     @Req() req: RequestWithQueryRunner,
-    @UploadedFiles()
-    files: { moive?: Express.Multer.File[]; poster?: Express.Multer.File[] },
+    @UploadedFile(
+      new MovieFilePipe({
+        maxSize: 5,
+        mimetype: 'video/mp4',
+      }),
+    )
+    file: Express.Multer.File,
   ) {
     console.log('---------------------');
-    console.log(files);
+    console.log(file);
 
     return this.movieService.create(body, req.queryRunner);
   }
