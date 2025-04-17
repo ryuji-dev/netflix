@@ -11,6 +11,7 @@ import {
   ClassSerializerInterceptor,
   ParseIntPipe,
   Req,
+  UploadedFile,
 } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
@@ -22,6 +23,7 @@ import { GetMoviesDto } from './dto/get-movies.dto';
 import { TransactionInterceptor } from 'src/common/interceptor/transaction.interceptor';
 import { QueryRunner } from 'typeorm';
 import { Request } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
 // import { ResponseTimeInterceptor } from 'src/common/interceptor/response-time.interceptor';
 
 interface RequestWithQueryRunner extends Request {
@@ -49,7 +51,13 @@ export class MovieController {
   @Post()
   @RBAC(Role.admin)
   @UseInterceptors(TransactionInterceptor)
-  postMovie(@Body() body: CreateMovieDto, @Req() req: RequestWithQueryRunner) {
+  @UseInterceptors(FileInterceptor('moive'))
+  postMovie(
+    @Body() body: CreateMovieDto,
+    @Req() req: RequestWithQueryRunner,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    console.log(file);
     return this.movieService.create(body, req.queryRunner);
   }
 
