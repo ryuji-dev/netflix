@@ -30,7 +30,7 @@ import {
   FileInterceptor,
   // FilesInterceptor,
 } from '@nestjs/platform-express';
-import { MovieFilePipe } from './pipe/movie-file.pipe';
+// import { MovieFilePipe } from './pipe/movie-file.pipe';
 // import { ResponseTimeInterceptor } from 'src/common/interceptor/response-time.interceptor';
 
 interface RequestWithQueryRunner extends Request {
@@ -78,18 +78,9 @@ export class MovieController {
   postMovie(
     @Body() body: CreateMovieDto,
     @Req() req: RequestWithQueryRunner,
-    @UploadedFile(
-      new MovieFilePipe({
-        maxSize: 5,
-        mimetype: 'video/mp4',
-      }),
-    )
-    file: Express.Multer.File,
+    @UploadedFile() moive: Express.Multer.File,
   ) {
-    console.log('---------------------');
-    console.log(file);
-
-    return this.movieService.create(body, req.queryRunner);
+    return this.movieService.create(body, moive.filename, req.queryRunner);
   }
 
   @Patch(':id')
