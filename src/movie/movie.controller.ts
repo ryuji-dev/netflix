@@ -11,8 +11,9 @@ import {
   ClassSerializerInterceptor,
   ParseIntPipe,
   Req,
-  UploadedFile,
+  // UploadedFile,
   UploadedFiles,
+  BadRequestException,
 } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
@@ -26,8 +27,8 @@ import { QueryRunner } from 'typeorm';
 import { Request } from 'express';
 import {
   FileFieldsInterceptor,
-  FileInterceptor,
-  FilesInterceptor,
+  // FileInterceptor,
+  // FilesInterceptor,
 } from '@nestjs/platform-express';
 // import { ResponseTimeInterceptor } from 'src/common/interceptor/response-time.interceptor';
 
@@ -57,10 +58,27 @@ export class MovieController {
   @RBAC(Role.admin)
   @UseInterceptors(TransactionInterceptor)
   @UseInterceptors(
-    FileFieldsInterceptor([
-      { name: 'moive', maxCount: 1 },
-      { name: 'poster', maxCount: 2 },
-    ]),
+    FileFieldsInterceptor(
+      [
+        { name: 'moive', maxCount: 1 },
+        { name: 'poster', maxCount: 2 },
+      ],
+      {
+        limits: {
+          fileSize: 1024 * 1024 * 5, // 5MB
+        },
+        fileFilter: (req, file, cb) => {
+          if (file.mimetype !== 'video/mp4') {
+            return cb(
+              new BadRequestException('mp4 파일만 업로드 가능합니다.'),
+              false,
+            );
+          }
+
+          return cb(null, true);
+        },
+      },
+    ),
   )
   postMovie(
     @Body() body: CreateMovieDto,
@@ -70,6 +88,7 @@ export class MovieController {
   ) {
     console.log('---------------------');
     console.log(files);
+
     return this.movieService.create(body, req.queryRunner);
   }
 
